@@ -197,7 +197,7 @@ class TestHand(unittest.TestCase):
         ])
 
         self.assertTrue(hand_a > hand_b)
-    
+
     def test_two_pair_tie(self):
         hand_a = Hand([
             Card(CardSuit.HEART, 4),
@@ -235,7 +235,7 @@ class TestHand(unittest.TestCase):
         ])
 
         self.assertTrue(hand_a > hand_b)
-    
+
     def test_flush_tie(self):
         hand_a = Hand([
             Card(CardSuit.HEART, 9),
