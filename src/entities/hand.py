@@ -35,12 +35,12 @@ class Hand:
 
     @property
     def rank(self):
-        most_common_rank_cards = self.get_most_common_rank_cards()
+        largest_kind_group = self.get_largest_kind_group()
         pairs = self.get_pairs()
 
         if self.is_straight_flush():
             return HandRank.STRAIGHT_FLUSH
-        if len(most_common_rank_cards) == 4:
+        if len(largest_kind_group) == 4:
             return HandRank.FOUR_OF_A_KIND
         if self.is_full_house():
             return HandRank.FULL_HOUSE
@@ -48,7 +48,7 @@ class Hand:
             return HandRank.FLUSH
         if self.is_straight():
             return HandRank.STRAIGHT
-        if len(most_common_rank_cards) == 3:
+        if len(largest_kind_group) == 3:
             return HandRank.THREE_OF_A_KIND
         if len(pairs) == 2:
             return HandRank.TWO_PAIR
@@ -58,19 +58,9 @@ class Hand:
         return HandRank.HIGH_CARD
 
     def is_full_house(self):
-        groups = self.group_by_rank()
-        card_groups = groups.values()
+        three_of_a_kind_group, two_of_a_kind_group = self.get_full_house_groups()
 
-        three_cards_group = None
-        two_card_group = None
-
-        for cards in card_groups:
-            if len(cards) == 3:
-                three_cards_group = cards
-            elif len(cards) == 2:
-                two_card_group = cards
-
-        return three_cards_group is not None and two_card_group is not None
+        return three_of_a_kind_group is not None and two_of_a_kind_group is not None
 
     def is_straight(self):
         cards_without_ace = [
@@ -102,20 +92,21 @@ class Hand:
         return self.is_flush() and self.is_straight()
 
     def get_pairs(self):
-        groups = self.group_by_rank()
+        groups = self.group_cards_by_rank()
         card_groups = groups.values()
         pairs = [cards for cards in card_groups if len(cards) == 2]
+        sorted_pairs = sorted(pairs, key=lambda pair: pair[0].rank, reverse=True)
 
-        return pairs
+        return sorted_pairs
 
-    def get_most_common_rank_cards(self):
-        groups = self.group_by_rank()
+    def get_largest_kind_group(self):
+        groups = self.group_cards_by_rank()
         card_groups = groups.values()
         sorted_values = sorted(card_groups, key=len, reverse=True)
 
         return sorted_values[0]
 
-    def group_by_rank(self):
+    def group_cards_by_rank(self):
         groups: Dict[int, List[Card]] = {}
 
         for card in self.cards:
@@ -125,22 +116,120 @@ class Hand:
 
         return groups
 
-    def has_higher_card(self, hand: "Hand"):
-        sorted_self_cards = sorted(self.cards, reverse=True)
-        sorted_other_cards = sorted(hand.cards, reverse=True)
+    def get_pairs(self):
+        groups = self.group_cards_by_rank()
+        card_groups = groups.values()
+        pairs = [cards for cards in card_groups if len(cards) == 2]
 
-        for index, card in enumerate(sorted_self_cards):
-            if card.rank > sorted_other_cards[index].rank:
+        sorted_pairs = sorted(
+            pairs, key=lambda pair: pair[0].rank, reverse=True
+        )
+
+        return sorted_pairs
+
+    def get_largest_kind_group(self):
+        groups = self.group_cards_by_rank()
+        card_groups = groups.values()
+        sorted_values = sorted(card_groups, key=len, reverse=True)
+
+        return sorted_values[0]
+
+    def get_full_house_groups(self):
+        groups = self.group_cards_by_rank()
+        card_groups = groups.values()
+
+        three_of_a_kind_group = None
+        two_of_a_kind_group = None
+
+        for cards in card_groups:
+            if len(cards) == 3:
+                three_of_a_kind_group = cards
+            elif len(cards) == 2:
+                two_of_a_kind_group = cards
+
+        return (two_of_a_kind_group, three_of_a_kind_group)
+
+    def wins_tie(self, hand: "Hand"):
+        rank = self.rank
+
+        if rank == HandRank.HIGH_CARD:
+            return self.wins_high_card_tie(hand)
+        if rank == HandRank.ONE_PAIR or rank == HandRank.TWO_PAIR:
+            return self.wins_pair_tie(hand)
+        if rank == HandRank.THREE_OF_A_KIND or rank == HandRank.FOUR_OF_A_KIND:
+            return self.wins_n_of_a_kind_tie(hand)
+        if rank == HandRank.STRAIGHT or rank == HandRank.FLUSH:
+            return self.wins_high_card_tie(hand)
+        if rank == HandRank.FULL_HOUSE:
+            return self.wins_full_house_tie(hand)
+
+        return True
+
+    def wins_high_card_tie(self, hand: "Hand"):
+        sorted_cards_a = sorted(self.cards, reverse=True)
+        sorted_cards_b = sorted(hand.cards, reverse=True)
+
+        for index, card_a in enumerate(sorted_cards_a):
+            card_b = sorted_cards_b[index]
+
+            if card_a.rank == card_b.rank:
+                continue
+
+            if card_a.rank > card_b.rank:
                 return True
+            else:
+                return False
+
+        return True
+
+    def wins_pair_tie(self, hand: "Hand"):
+        pairs_a = self.get_pairs()
+        pairs_b = hand.get_pairs()
+
+        for index, pair_a in enumerate(pairs_a):
+            pair_b = pairs_b[index]
+
+            if pair_a[0].rank == pair_b[0].rank:
+                continue
+
+            if pair_a[0].rank > pair_b[0].rank:
+                return True
+            else:
+                return False
+
+        return self.wins_high_card_tie(hand)
+
+    def wins_n_of_a_kind_tie(self, hand: "Hand"):
+        cards_a = self.get_largest_kind_group()
+        cards_b = hand.get_largest_kind_group()
+
+        if cards_a[0].rank == cards_b[0].rank:
+            return self.wins_high_card_tie(hand)
+
+        if cards_a[0].rank > cards_b[0].rank:
+            return True
 
         return False
 
-    def __eq__(self, other: "Hand"):
-        if not isinstance(other, Hand) or len(self.cards) != len(other.cards):
+    def wins_full_house_tie(self, hand: "Hand"):
+        two_of_a_kind_group_a, three_of_a_kind_group_a = self.get_full_house_groups()
+        two_of_a_kind_group_b, three_of_a_kind_group_b = hand.get_full_house_groups()
+
+        if three_of_a_kind_group_a[0].rank > three_of_a_kind_group_b[0].rank:
+            return True
+        if three_of_a_kind_group_b[0].rank > three_of_a_kind_group_a[0].rank:
+            return False
+        if two_of_a_kind_group_a[0].rank > two_of_a_kind_group_b[0].rank:
+            return True
+
+        return False
+
+    def __eq__(self, hand: "Hand"):
+        if not isinstance(hand, Hand) or len(self.cards) != len(hand.cards):
             return False
 
         sorted_self_cards = sorted(self.cards)
-        sorted_other_cards = sorted(other.cards)
+        sorted_other_cards = sorted(hand.cards)
 
         for index, card in enumerate(sorted_self_cards):
             other_card = sorted_other_cards[index]
@@ -150,14 +239,17 @@ class Hand:
 
         return True
 
-    def __gt__(self, other: "Hand"):
-        if not isinstance(other, Hand):
+    def __gt__(self, hand: "Hand"):
+        if not isinstance(hand, Hand):
             return False
 
-        if self.rank > other.rank:
+        if self.rank > hand.rank:
             return True
 
-        return self.has_higher_card(other)
+        if self.rank == hand.rank and self.wins_tie(hand):
+            return True
+
+        return False
 
     def __str__(self):
         hand_string = ", ".join([str(card) for card in self.cards])

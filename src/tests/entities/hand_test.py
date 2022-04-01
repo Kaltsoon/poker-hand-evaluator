@@ -160,21 +160,116 @@ class TestHand(unittest.TestCase):
         self.assertTrue(hand_one_pair > hand_high_card)
         self.assertTrue(hand_high_card < hand_one_pair)
 
-    def test_comparisons_with_high_card(self):
-        hand_one_pair_high_card = Hand([
+    def test_high_card_tie(self):
+        hand_a = Hand([
             Card(CardSuit.HEART, 2),
-            Card(CardSuit.SPADE, 7),
+            Card(CardSuit.SPADE, 3),
             Card(CardSuit.HEART, 4),
             Card(CardSuit.DIAMOND, 5),
-            Card(CardSuit.HEART, 2)
+            Card(CardSuit.HEART, 11)
         ])
 
-        hand_one_pair = Hand([
+        hand_b = Hand([
             Card(CardSuit.HEART, 2),
+            Card(CardSuit.SPADE, 3),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 10)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+
+    def test_one_pair_tie(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.SPADE, 3),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 11)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 2),
+            Card(CardSuit.SPADE, 3),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 3)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+    
+    def test_two_pair_tie(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.SPADE, 5),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 11)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 2),
+            Card(CardSuit.SPADE, 3),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 2),
+            Card(CardSuit.HEART, 3)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+
+    def test_three_of_a_kind_tie(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.SPADE, 3),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 4)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 2),
+            Card(CardSuit.SPADE, 2),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 2),
+            Card(CardSuit.HEART, 3)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+    
+    def test_flush_tie(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 9),
+            Card(CardSuit.HEART, 3),
+            Card(CardSuit.HEART, 7),
+            Card(CardSuit.HEART, 5),
+            Card(CardSuit.HEART, 4)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 7),
+            Card(CardSuit.HEART, 1),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.HEART, 5),
+            Card(CardSuit.HEART, 3)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+
+    def test_straight_tie(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 3),
+            Card(CardSuit.SPADE, 5),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 7),
+            Card(CardSuit.HEART, 6)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 1),
             Card(CardSuit.SPADE, 3),
             Card(CardSuit.HEART, 4),
             Card(CardSuit.DIAMOND, 5),
             Card(CardSuit.HEART, 2)
         ])
 
-        self.assertTrue(hand_one_pair_high_card > hand_one_pair)
+        self.assertTrue(hand_a > hand_b)
