@@ -22,3 +22,5 @@ jobs:
         run: poetry install
       - name: Run tests
         run: poetry run pytest src
+      - name: Run type checks
+        run: poetry run mypy src/index.py

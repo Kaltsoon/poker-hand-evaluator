@@ -87,7 +87,7 @@ class Hand:
 
         return Hand(normalized_cards)
 
-    def __eq__(self, hand: "Hand"):
+    def __eq__(self, hand: object):
         if not isinstance(hand, Hand) or len(self.cards) != len(hand.cards):
             return False
 
@@ -102,7 +102,7 @@ class Hand:
 
         return True
 
-    def __gt__(self, hand: "Hand"):
+    def __gt__(self, hand: object):
         if not isinstance(hand, Hand):
             return False
 
