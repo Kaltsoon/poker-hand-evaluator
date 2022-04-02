@@ -57,18 +57,17 @@ class Hand:
     cards: List[Card]
 
     @property
-    def ranker(self):
+    def rank(self):
+        _, rank = self.get_ranker()
+
+        return rank
+
+    def get_ranker(self):
         for ranker, rank in RANKERS:
             if ranker.matches(self):
                 return (ranker, rank)
 
         return (HighCardRanker(), HandRank.HIGH_CARD)
-
-    @property
-    def rank(self):
-        _, rank = self.ranker
-
-        return rank
 
     def to_straight_hand(self):
         cards_without_aces = [
@@ -107,7 +106,7 @@ class Hand:
         if not isinstance(hand, Hand):
             return False
 
-        ranker, rank = self.ranker
+        ranker, rank = self.get_ranker()
         other_rank = hand.rank
 
         if rank > other_rank:
