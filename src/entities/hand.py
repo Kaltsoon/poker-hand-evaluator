@@ -63,9 +63,16 @@ class Hand:
         return three_of_a_kind_group is not None and two_of_a_kind_group is not None
 
     def is_straight(self):
-        cards_without_ace = [
-            card for card in self.cards if card.type != CardType.ACE]
-        sorted_cards = sorted(cards_without_ace)
+        cards_without_aces = [
+            card for card in self.cards if card.type != CardType.ACE
+        ]
+
+        ace_count = len(self.cards) - len(cards_without_aces)
+
+        if ace_count > 1:
+            return False
+
+        sorted_cards = sorted(cards_without_aces)
 
         for index in range(0, len(sorted_cards) - 1):
             card = sorted_cards[index]
@@ -74,7 +81,7 @@ class Hand:
             if abs(card.rank - next_card.rank) != 1:
                 return False
 
-        if len(cards_without_ace) == len(self.cards):
+        if ace_count == 0:
             return True
 
         return sorted_cards[0].rank == 2 or sorted_cards[len(sorted_cards) - 1].type == CardType.KING
@@ -95,9 +102,13 @@ class Hand:
         groups = self.group_cards_by_rank()
         card_groups = groups.values()
         pairs = [cards for cards in card_groups if len(cards) == 2]
-        sorted_pairs = sorted(pairs, key=lambda pair: pair[0].rank, reverse=True)
+        sorted_pairs = sorted(
+            pairs, key=lambda pair: pair[0].rank, reverse=True)
 
         return sorted_pairs
+
+    def get_aces(self):
+        return [card for card in self.cards if card.type == CardType.ACE]
 
     def get_largest_kind_group(self):
         groups = self.group_cards_by_rank()
@@ -158,10 +169,12 @@ class Hand:
             return self.wins_pair_tie(hand)
         if rank == HandRank.THREE_OF_A_KIND or rank == HandRank.FOUR_OF_A_KIND:
             return self.wins_n_of_a_kind_tie(hand)
-        if rank == HandRank.STRAIGHT or rank == HandRank.FLUSH:
+        if rank == HandRank.FLUSH:
             return self.wins_high_card_tie(hand)
         if rank == HandRank.FULL_HOUSE:
             return self.wins_full_house_tie(hand)
+        if rank == HandRank.STRAIGHT or rank == HandRank.STRAIGHT_FLUSH:
+            return self.wins_straight_tie(hand)
 
         return True
 
@@ -220,6 +233,18 @@ class Hand:
         if three_of_a_kind_group_b[0].rank > three_of_a_kind_group_a[0].rank:
             return False
         if two_of_a_kind_group_a[0].rank > two_of_a_kind_group_b[0].rank:
+            return True
+
+        return False
+
+    def wins_straight_tie(self, hand: "Hand"):
+        aces_a = self.get_aces()
+        aces_b = hand.get_aces()
+
+        if len(aces_a) == len(aces_b):
+            return self.wins_high_card_tie(hand)
+
+        if len(aces_a) < len(aces_b):
             return True
 
         return False

@@ -10,4 +10,4 @@ Run the code with `python3 src/index.py`. The code generates a new hand and eval
 
 ## Running tests 
 
-Install dependencies with `poetry install` and run the tests with `poetry run pytest src`.
+Install dependencies with `poetry install` and run the tests with `poetry run inv test`. Coverage report can be generated with `poetry run inv coverage-report`.

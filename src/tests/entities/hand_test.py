@@ -37,7 +37,7 @@ class TestHand(unittest.TestCase):
 
         self.assertEqual(hand.rank, HandRank.FULL_HOUSE)
 
-    def _test_flush(self):
+    def test_flush(self):
         hand = Hand([
             Card(CardSuit.HEART, 2),
             Card(CardSuit.HEART, 3),
@@ -73,9 +73,18 @@ class TestHand(unittest.TestCase):
             Card(CardSuit.HEART, 12)
         ])
 
+        hand_with_many_aces = Hand([
+            Card(CardSuit.DIAMOND, 14),
+            Card(CardSuit.CLUB, 13),
+            Card(CardSuit.DIAMOND, 11),
+            Card(CardSuit.DIAMOND, 14),
+            Card(CardSuit.HEART, 12)
+        ])
+
         self.assertEqual(hand_without_ace.rank, HandRank.STRAIGHT)
         self.assertEqual(hand_with_low_ace.rank, HandRank.STRAIGHT)
         self.assertEqual(hand_with_high_ace.rank, HandRank.STRAIGHT)
+        self.assertNotEqual(hand_with_many_aces.rank, HandRank.STRAIGHT)
 
     def test_three_of_a_kind(self):
         hand = Hand([
@@ -270,6 +279,63 @@ class TestHand(unittest.TestCase):
             Card(CardSuit.HEART, 4),
             Card(CardSuit.DIAMOND, 5),
             Card(CardSuit.HEART, 2)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+
+    def test_straight_tie_with_ohter_has_ace(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 2),
+            Card(CardSuit.SPADE, 3),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 6)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 14),
+            Card(CardSuit.SPADE, 2),
+            Card(CardSuit.HEART, 3),
+            Card(CardSuit.DIAMOND, 4),
+            Card(CardSuit.HEART, 5)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+
+    def test_straight_tie_with_both_have_aces(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 10),
+            Card(CardSuit.SPADE, 11),
+            Card(CardSuit.HEART, 12),
+            Card(CardSuit.DIAMOND, 13),
+            Card(CardSuit.HEART, 14)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 14),
+            Card(CardSuit.SPADE, 2),
+            Card(CardSuit.HEART, 3),
+            Card(CardSuit.DIAMOND, 4),
+            Card(CardSuit.HEART, 5)
+        ])
+
+        self.assertTrue(hand_a > hand_b)
+
+    def test_full_house_tie(self):
+        hand_a = Hand([
+            Card(CardSuit.HEART, 5),
+            Card(CardSuit.SPADE, 5),
+            Card(CardSuit.HEART, 11),
+            Card(CardSuit.DIAMOND, 5),
+            Card(CardSuit.HEART, 11)
+        ])
+
+        hand_b = Hand([
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.SPADE, 13),
+            Card(CardSuit.HEART, 4),
+            Card(CardSuit.DIAMOND, 13),
+            Card(CardSuit.HEART, 4)
         ])
 
         self.assertTrue(hand_a > hand_b)
