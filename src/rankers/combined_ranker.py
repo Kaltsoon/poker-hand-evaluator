@@ -21,5 +21,5 @@ class CombinedRanker(HandRanker):
         for ranker in self.rankers:
             if ranker.wins_tie(hand_a, hand_b):
                 return True
-        
+
         return False
