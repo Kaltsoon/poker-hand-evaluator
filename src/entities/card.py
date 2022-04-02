@@ -39,6 +39,9 @@ class Card:
 
     @property
     def type(self):
+        if self.rank == 1:
+            return CardType.ACE
+
         if self.rank <= 10:
             return CardType.NUMERAL
 

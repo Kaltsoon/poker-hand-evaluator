@@ -57,22 +57,32 @@ class Hand:
 
         return HandRank.HIGH_CARD
 
+    def to_straight_hand(self):
+        cards_without_aces = [
+            card for card in self.cards if card.type != CardType.ACE
+        ]
+
+        min_card = min(cards_without_aces)
+        ace_rank = 1 if min_card.rank == 2 else 14
+
+        normalized_cards = [
+            Card(
+                card.suit,
+                card.rank if card.type != CardType.ACE else ace_rank
+            )
+            for card in self.cards
+        ]
+
+        return Hand(normalized_cards)
+
     def is_full_house(self):
         three_of_a_kind_group, two_of_a_kind_group = self.get_full_house_groups()
 
         return three_of_a_kind_group is not None and two_of_a_kind_group is not None
 
     def is_straight(self):
-        cards_without_aces = [
-            card for card in self.cards if card.type != CardType.ACE
-        ]
-
-        ace_count = len(self.cards) - len(cards_without_aces)
-
-        if ace_count > 1:
-            return False
-
-        sorted_cards = sorted(cards_without_aces)
+        hand = self.to_straight_hand()
+        sorted_cards = sorted(hand.cards)
 
         for index in range(0, len(sorted_cards) - 1):
             card = sorted_cards[index]
@@ -81,10 +91,7 @@ class Hand:
             if abs(card.rank - next_card.rank) != 1:
                 return False
 
-        if ace_count == 0:
-            return True
-
-        return sorted_cards[0].rank == 2 or sorted_cards[len(sorted_cards) - 1].type == CardType.KING
+        return True
 
     def is_flush(self):
         suit = self.cards[0].suit
@@ -97,18 +104,6 @@ class Hand:
 
     def is_straight_flush(self):
         return self.is_flush() and self.is_straight()
-
-    def get_pairs(self):
-        groups = self.group_cards_by_rank()
-        card_groups = groups.values()
-        pairs = [cards for cards in card_groups if len(cards) == 2]
-        sorted_pairs = sorted(
-            pairs, key=lambda pair: pair[0].rank, reverse=True)
-
-        return sorted_pairs
-
-    def get_aces(self):
-        return [card for card in self.cards if card.type == CardType.ACE]
 
     def get_largest_kind_group(self):
         groups = self.group_cards_by_rank()
@@ -238,16 +233,7 @@ class Hand:
         return False
 
     def wins_straight_tie(self, hand: "Hand"):
-        aces_a = self.get_aces()
-        aces_b = hand.get_aces()
-
-        if len(aces_a) == len(aces_b):
-            return self.wins_high_card_tie(hand)
-
-        if len(aces_a) < len(aces_b):
-            return True
-
-        return False
+        return self.to_straight_hand().wins_high_card_tie(hand.to_straight_hand())
 
     def __eq__(self, hand: "Hand"):
         if not isinstance(hand, Hand) or len(self.cards) != len(hand.cards):

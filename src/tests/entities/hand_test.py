@@ -310,7 +310,7 @@ class TestHand(unittest.TestCase):
             Card(CardSuit.DIAMOND, 13),
             Card(CardSuit.HEART, 14)
         ])
-
+        
         hand_b = Hand([
             Card(CardSuit.HEART, 14),
             Card(CardSuit.SPADE, 2),
