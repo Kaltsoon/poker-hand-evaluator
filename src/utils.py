@@ -7,9 +7,9 @@ if TYPE_CHECKING:
 def get_largest_kind_group(cards: List["Card"]):
     groups = group_cards_by_rank(cards)
     card_groups = groups.values()
-    sorted_values = sorted(card_groups, key=len, reverse=True)
+    largest_group = max(card_groups, key=len)
 
-    return sorted_values[0]
+    return largest_group
 
 
 def group_cards_by_rank(cards: List["Card"]):
