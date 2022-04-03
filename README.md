@@ -1,4 +1,4 @@
-# Poker hand evaluator ♠️
+# ♠️ Poker hand evaluator
 
 [![Test](https://github.com/Kaltsoon/poker-hand-evaluator/actions/workflows/test.yml/badge.svg)](https://github.com/Kaltsoon/poker-hand-evaluator/actions/workflows/test.yml)
 
