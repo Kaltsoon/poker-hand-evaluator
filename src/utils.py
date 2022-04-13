@@ -35,7 +35,7 @@ def get_pairs(cards: List["Card"]) -> List[List["Card"]]:
     return sorted_pairs
 
 
-def get_full_house_groups(cards: List["Card"]) -> Tuple[Optional[List[Card]], Optional[List[Card]]]:
+def get_full_house_groups(cards: List["Card"]) -> Tuple[Optional[List["Card"]], Optional[List["Card"]]]:
     groups = group_cards_by_rank(cards)
     card_groups = groups.values()
 
