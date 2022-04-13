@@ -23,6 +23,9 @@ class FullHouseRanker(HandRanker):
             hand_b.cards
         )
 
+        if two_of_a_kind_group_a is None or three_of_a_kind_group_a is None or two_of_a_kind_group_b is None or three_of_a_kind_group_b is None:
+            return False
+
         if three_of_a_kind_group_a[0].rank > three_of_a_kind_group_b[0].rank:
             return True
         if three_of_a_kind_group_b[0].rank > three_of_a_kind_group_a[0].rank:

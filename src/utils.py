@@ -13,7 +13,7 @@ def get_largest_kind_group(cards: List["Card"]) -> List["Card"]:
 
 
 def group_cards_by_rank(cards: List["Card"]) -> Dict[int, List["Card"]]:
-    groups = {}
+    groups: Dict[int, List["Card"]] = {}
 
     for card in cards:
         rank_cards = groups.get(card.rank, [])
