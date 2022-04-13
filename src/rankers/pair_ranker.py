@@ -12,12 +12,12 @@ if TYPE_CHECKING:
 class PairRanker(HandRanker):
     pair_count: int
 
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         pairs = get_pairs(hand.cards)
 
         return len(pairs) == self.pair_count
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         pairs_a = get_pairs(hand_a.cards)
         pairs_b = get_pairs(hand_b.cards)
 

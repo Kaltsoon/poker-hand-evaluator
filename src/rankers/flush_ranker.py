@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class FlushRanker(HandRanker):
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         suit = hand.cards[0].suit
 
         for card in hand.cards:
@@ -16,5 +16,5 @@ class FlushRanker(HandRanker):
 
         return True
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         return HighCardRanker().wins_tie(hand_a, hand_b)

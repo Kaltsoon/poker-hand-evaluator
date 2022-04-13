@@ -38,7 +38,7 @@ class Card:
     rank: int
 
     @property
-    def type(self):
+    def type(self) -> CardType:
         if self.rank == 1:
             return CardType.ACE
 

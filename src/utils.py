@@ -4,7 +4,7 @@ if TYPE_CHECKING:
     from entities.card import Card
 
 
-def get_largest_kind_group(cards: List["Card"]):
+def get_largest_kind_group(cards: List["Card"]) -> List["Card"]:
     groups = group_cards_by_rank(cards)
     card_groups = groups.values()
     largest_group = max(card_groups, key=len)
@@ -12,8 +12,8 @@ def get_largest_kind_group(cards: List["Card"]):
     return largest_group
 
 
-def group_cards_by_rank(cards: List["Card"]):
-    groups: Dict[int, List["Card"]] = {}
+def group_cards_by_rank(cards: List["Card"]) -> Dict[int, List["Card"]]:
+    groups = {}
 
     for card in cards:
         rank_cards = groups.get(card.rank, [])
@@ -23,7 +23,7 @@ def group_cards_by_rank(cards: List["Card"]):
     return groups
 
 
-def get_pairs(cards: List["Card"]):
+def get_pairs(cards: List["Card"]) -> List[List["Card"]]:
     groups = group_cards_by_rank(cards)
     card_groups = groups.values()
     pairs = [cards for cards in card_groups if len(cards) == 2]
@@ -35,7 +35,7 @@ def get_pairs(cards: List["Card"]):
     return sorted_pairs
 
 
-def get_full_house_groups(cards: List["Card"]):
+def get_full_house_groups(cards: List["Card"]) -> List[List["Card"]]:
     groups = group_cards_by_rank(cards)
     card_groups = groups.values()
 

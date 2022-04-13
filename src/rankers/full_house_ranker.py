@@ -7,14 +7,14 @@ if TYPE_CHECKING:
 
 
 class FullHouseRanker(HandRanker):
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         three_of_a_kind_group, two_of_a_kind_group = get_full_house_groups(
             hand.cards
         )
 
         return three_of_a_kind_group is not None and two_of_a_kind_group is not None
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         two_of_a_kind_group_a, three_of_a_kind_group_a = get_full_house_groups(
             hand_a.cards
         )

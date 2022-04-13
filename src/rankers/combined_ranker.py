@@ -10,14 +10,14 @@ if TYPE_CHECKING:
 class CombinedRanker(HandRanker):
     rankers: List[HandRanker]
 
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         for ranker in self.rankers:
             if not ranker.matches(hand):
                 return False
 
         return True
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         for ranker in self.rankers:
             if ranker.wins_tie(hand_a, hand_b):
                 return True

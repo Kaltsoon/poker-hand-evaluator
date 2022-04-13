@@ -5,7 +5,7 @@ from entities.card import Card, CardSuit
 from entities.hand import Hand
 
 
-def get_all_cards():
+def get_all_cards() -> List[Card]:
     ranks = range(2, 15)
     cards = [Card(suit, rank) for suit in CardSuit for rank in ranks]
     shuffle(cards)
@@ -17,12 +17,12 @@ def get_all_cards():
 class Deck:
     cards: List[Card] = field(default_factory=get_all_cards)
 
-    def shuffle(self):
+    def shuffle(self) -> List[Card]:
         shuffle(self.cards)
 
         return self.cards
 
-    def deal(self, hand_count: int = 1):
+    def deal(self, hand_count: int = 1) -> List[Hand]:
         if hand_count > 6:
             raise Exception(f"Maximum number of hands is 6")
 

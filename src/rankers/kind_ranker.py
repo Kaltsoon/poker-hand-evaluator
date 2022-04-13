@@ -12,12 +12,12 @@ if TYPE_CHECKING:
 class KindRanker(HandRanker):
     kind_count: int
 
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         cards = get_largest_kind_group(hand.cards)
 
         return len(cards) == self.kind_count
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         cards_a = get_largest_kind_group(hand_a.cards)
         cards_b = get_largest_kind_group(hand_b.cards)
 

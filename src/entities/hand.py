@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Tuple
 from enum import IntEnum
 from entities.card import Card, CardType
+from rankers.hand_ranker import HandRanker
 from rankers.pair_ranker import PairRanker
 from rankers.kind_ranker import KindRanker
 from rankers.straight_ranker import StraightRanker
@@ -57,19 +58,19 @@ class Hand:
     cards: List[Card]
 
     @property
-    def rank(self):
+    def rank(self) -> HandRank:
         _, rank = self.get_ranker()
 
         return rank
 
-    def get_ranker(self):
+    def get_ranker(self) -> Tuple[HandRanker, HandRank]:
         for ranker, rank in RANKERS:
             if ranker.matches(self):
                 return (ranker, rank)
 
         return (HighCardRanker(), HandRank.HIGH_CARD)
 
-    def to_straight_hand(self):
+    def to_straight_hand(self) -> "Hand":
         cards_without_aces = [
             card for card in self.cards if card.type != CardType.ACE
         ]

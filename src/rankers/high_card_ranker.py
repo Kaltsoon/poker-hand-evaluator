@@ -6,10 +6,10 @@ if TYPE_CHECKING:
 
 
 class HighCardRanker(HandRanker):
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         return True
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         sorted_cards_a = sorted(hand_a.cards, reverse=True)
         sorted_cards_b = sorted(hand_b.cards, reverse=True)
 

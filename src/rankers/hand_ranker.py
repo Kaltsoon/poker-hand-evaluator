@@ -5,8 +5,8 @@ if TYPE_CHECKING:
 
 
 class HandRanker:
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         raise NotImplementedError()
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         raise NotImplementedError()

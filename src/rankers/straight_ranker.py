@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class StraightRanker(HandRanker):
-    def matches(self, hand: "Hand"):
+    def matches(self, hand: "Hand") -> bool:
         straight_hand = hand.to_straight_hand()
         sorted_cards = sorted(straight_hand.cards)
 
@@ -20,7 +20,7 @@ class StraightRanker(HandRanker):
 
         return True
 
-    def wins_tie(self, hand_a: "Hand", hand_b: "Hand"):
+    def wins_tie(self, hand_a: "Hand", hand_b: "Hand") -> bool:
         return HighCardRanker().wins_tie(
             hand_a.to_straight_hand(),
             hand_b.to_straight_hand()
