@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Tuple, Optional
 
 if TYPE_CHECKING:
     from entities.card import Card
@@ -35,7 +35,7 @@ def get_pairs(cards: List["Card"]) -> List[List["Card"]]:
     return sorted_pairs
 
 
-def get_full_house_groups(cards: List["Card"]) -> List[List["Card"]]:
+def get_full_house_groups(cards: List["Card"]) -> Tuple[Optional[List[Card]], Optional[List[Card]]]:
     groups = group_cards_by_rank(cards)
     card_groups = groups.values()
 
