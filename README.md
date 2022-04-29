@@ -10,4 +10,6 @@ Run the code with `python3 src/index.py`. The code generates a new hand and eval
 
 ## Running tests 
 
-Install dependencies with `poetry install` and run the tests with `poetry run inv test`. Coverage report can be generated with `poetry run inv coverage-report`.
+1. Create a virtual environmennt by running `python3 -m venv env` and activate it by running `source env/bin/activate`.
+2. Install dependencies inside the virtual environment by running `pip3 install -r requirements.txt`.
+3. Inside the virtual environment run the tests with `inv test`. Coverage report can be generated with `inv coverage-report`.
